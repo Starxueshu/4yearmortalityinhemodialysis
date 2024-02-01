@@ -30,14 +30,14 @@ if st.button("Submit"):
     else:
         st.error(f"Risk group: High-risk group")
     if prediction < 0.439:
-        st.success(f"For low-risk sepsis patients, XXXX.")
+        st.success(f"Regarding low-risk individuals, while those have a lower likelihood of four-year mortality, it is essential to closely monitor their cardiac function, blood cell count, and nutrition condition. This enables prompt detection and intervention in case of unexpected mortality. Furthermore, in individuals assessed as low-risk, a more conservative approach to hemodialysis management may be suitable. This includes avoiding unnecessary pharmacological therapy or frequent detection, and restricting interventions to specific clinical indications.")
     else:
-        st.error(f"For high-risk patients, XXXX.")
+        st.error(f"High-risk individuals should be thoroughly evaluated and optimized in their hemodialysis life. This includes optimizing their cardiac function including increasing heart ejection fraction and decreasing ischemic heart disease, avoiding infection, promoting nutrition condition, and even considering pharmacological interventions to improve those parameters. In addition, a comprehensive hemodialysis management plan should be implemented for high-risk patients. This may involve suitable ultrafiltration dehydration during hemodialysis, appropriate choice of dialysis methods, proper nutrition and regular routine cardiac color Doppler ultrasound based on individual needs.")
 
     st.subheader('Model explanation: contribution of each model predictor')
     star = pd.read_csv('X_train.csv', low_memory=False)
     y_train0 = pd.read_csv('y_train.csv', low_memory=False)
-    data_train_X = star.loc[:, ["Age", "Albumin", "N109L", "EF", "IDH"]]
+    data_train_X = star.loc[:, ["IDH", "Age", "Albumin", "N109L", "EF"]]
     y_train = y_train0.Group
     model = rf_clf.fit(data_train_X, y_train)
     explainer = shap.Explainer(model)

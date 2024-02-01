@@ -10,8 +10,8 @@ st.header("Predicting Four-Year mortality in hemodialysis patients using machine
 st.sidebar.title("Parameters Selection Panel")
 st.sidebar.markdown("Picking up parameters")
 Age = st.sidebar.slider("Age (years)", 40, 80)
-Albumin = st.sidebar.slider("Albumin (g/L)", 30, 50)
-N109L = st.sidebar.slider("Neutrophil (×10^9/L)", 3, 12)
+Albumin = st.sidebar.slider("Albumin (g/L)", 30.0, 50.0)
+N109L = st.sidebar.slider("Neutrophil (×10^9/L)", 3.00, 12.00)
 EF = st.sidebar.slider("Ejection fraction (%)", 40, 80)
 IDH= st.sidebar.selectbox("Ischemic heart disease", ("No", "Yes"))
 

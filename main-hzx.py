@@ -16,30 +16,40 @@ EF = st.sidebar.slider("Ejection fraction (%)", 40, 80)
 IDH= st.sidebar.selectbox("Ischemic heart disease", ("No", "Yes"))
 
 if st.button("Submit"):
-    rf_clf = jl.load("Xgbc_clf_final_round.pkl")
+    rf_clf1 = jl.load("Xgbc_clf_final_round_oneyear.pkl")
+    rf_clf4 = jl.load("Xgbc_clf_final_round.pkl")
+    
     x = pd.DataFrame([[IDH, Age, Albumin, N109L, EF]],
                      columns=["IDH", "Age", "Albumin", "N109L", "EF"])
     x = x.replace(["No", "Yes"], [0, 1])
 
     # Get prediction
-    prediction = rf_clf.predict_proba(x)[0, 1]
+    prediction1 = rf_clf1.predict_proba(x)[0, 1]
+    prediction4 = rf_clf4.predict_proba(x)[0, 1]
         # Output prediction
-    st.text(f"Four-Year mortality: {'{:.2%}'.format(round(prediction, 5))}")
-    if prediction < 0.439:
+    st.text(f"One-Year mortality: {'{:.2%}'.format(round(prediction1, 5))}")
+    if prediction1 < 0.439:
         st.success(f"Risk group: low-risk group")
     else:
         st.error(f"Risk group: High-risk group")
-    if prediction < 0.439:
+        
+    st.text(f"Four-Year mortality: {'{:.2%}'.format(round(prediction4, 5))}")
+    if prediction4 < 0.439:
+        st.success(f"Risk group: low-risk group")
+    else:
+        st.error(f"Risk group: High-risk group")
+    if prediction4 < 0.439:
         st.success(f"Regarding low-risk individuals, while those have a lower likelihood of four-year mortality, it is essential to closely monitor their cardiac function, blood cell count, and nutrition condition. This enables prompt detection and intervention in case of unexpected mortality. Furthermore, in individuals assessed as low-risk, a more conservative approach to hemodialysis management may be suitable. This includes avoiding unnecessary pharmacological therapy or frequent detection, and restricting interventions to specific clinical indications.")
     else:
         st.error(f"High-risk individuals should be thoroughly evaluated and optimized in their hemodialysis life. This includes optimizing their cardiac function including increasing heart ejection fraction and decreasing ischemic heart disease, avoiding infection, promoting nutrition condition, and even considering pharmacological interventions to improve those parameters. In addition, a comprehensive hemodialysis management plan should be implemented for high-risk patients. This may involve suitable ultrafiltration dehydration during hemodialysis, appropriate choice of dialysis methods, proper nutrition and regular routine cardiac color Doppler ultrasound based on individual needs.")
 
+    
     st.subheader('Model explanation: contribution of each model predictor')
     star = pd.read_csv('X_train.csv', low_memory=False)
     y_train0 = pd.read_csv('y_train.csv', low_memory=False)
     data_train_X = star.loc[:, ["IDH", "Age", "Albumin", "N109L", "EF"]]
     y_train = y_train0.Group
-    model = rf_clf.fit(data_train_X, y_train)
+    model = rf_clf4.fit(data_train_X, y_train)
     explainer = shap.Explainer(model)
     shap_value = explainer(x)
     # st.text(shap_value)
